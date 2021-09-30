@@ -1,0 +1,176 @@
+{% extends '../store/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <div class="breadcrumb__links">
+                        <h4>Бажані товари</h4>
+                        <a href="{% url 'store:home_page' %}">Головна</a>
+                        <a href="{% url 'store:products_list' %}">Продукти</a>
+                        <span>Бажані товари</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+
+<!-- Shopping Cart Section Begin -->
+{% comment %} <section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shopping__cart__table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Продукт</th>
+                            </tr>
+                        </thead>
+                        {% for item in wish.products.all|dictsort:"content_object.price" %}
+                        <tr>
+                            <td class="product__cart__item">
+                                <div class="product__cart__item__pic">
+                                    <img style="max-height:150px;"
+                                        src="{% if item.content_object.image %}{{item.content_object.image.url}}{% else %}{% static 'img/default/default.jpg'%}{% endif %}"
+                                        alt="">
+                                </div>
+                                <div class="product__cart__item__text">
+                                    <h6>{{item.content_object.name}}</h6>
+                                    <h6>{{item.content_object.brand}}</h6>
+                                    {% if item.content_object.discount_price %}
+                                    <h5>{{item.content_object.discount_price}} грн</h5>
+                                    {% else %}
+                                    <h5>{{item.content_object.price}} грн</h5>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td class="cart__close">
+                                <a
+                                    href="{% url 'wish:delete_from_wish' ct_model=item.content_object.get_model_name product_slug=item.content_object.slug %}"><i
+                                        class="fa fa-close"></i></a>
+                                <br>
+                                <br>
+                                <form
+                                    action="{% url 'cart:add_to_cart' ct_model=item.content_object.get_model_name product_slug=item.content_object.slug %}"
+                                    method="POST">{% csrf_token %}
+                                    <button type='submit'
+                                        style="border:none; border-radius:100px; height:40px; width:40px;"><img
+                                            src="{% static 'img/icon/cart.png' %}"></button>
+
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="continue__btn">
+                            <a href="{% url 'store:products_list' %}">Повернутися до продуктів</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Список бажаних товарів доступний тільки авторизованим користувачам.</h3>
+                <h6>Будь ласка, зайдіть в свій акаунт <a href="">авторизуватися</a></h6>
+            </div>
+        </div>
+</section>
+{% endif %} {% endcomment %}
+
+
+{% if request.user.is_authenticated %}
+<section class="shop spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                {% if wish.products.all %}
+                    {% for item in wish.products.all %}
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <form
+                            action="{% url 'cart:add_to_cart' ct_model=item.content_object.get_model_name product_slug=item.content_object.slug %}"
+                            method='POST'>{% csrf_token %}
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg"
+                                    data-setbg="{% if item.content_object.image %}{{item.content_object.image.url}}{% else %}{% static 'img/default/default.jpg'%}{% endif %}">
+                                    {% if item.content_object.discount_price %}
+                                    <span class="label"><b>Знижена ціна!</b></span>
+                                    {% endif %}
+                                    <ul class="product__hover">
+                                        <li><a href="{{item.content_object.get_absolute_url}}"><img
+                                                    src="{% static 'img/icon/search.png' %}" alt=""></a>
+                                        </li>
+                                        <li> <a style="color: #000; padding-left:12px;" href="{% url 'wish:delete_from_wish' ct_model=item.content_object.get_model_name product_slug=item.content_object.slug %}"><i
+                                                    class="fa fa-close"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6>{{item.content_object.name|title}} {{item.content_object.brand}}</h6>
+                                    <input style="color:red;" type="submit" class="btn add-cart"
+                                        value="+ Добавити в корзин">
+
+                                    <div class="rating">
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                    </div>
+                                    {% if item.content_object.discount_price %}
+                                    <h5>{{item.content_object.discount_price}} грн</h5>
+                                    {% else %}
+                                    <h5>{{item.content_object.price}} грн</h5>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                        <h3>Список бажаних товарів порожній.</h3>
+                    {% endif %}
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="continue__btn">
+                            <a href="{% url 'store:products_list' %}">Повернутися до продуктів</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% else %}
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Список бажаних товарів доступний тільки авторизованим користувачам.</h3>
+                <h6>Будь ласка, зайдіть в свій акаунт <a href="">авторизуватися</a></h6>
+            </div>
+        </div>
+</section>
+{% endif %}
+
+{% endblock content %}

@@ -1,0 +1,17 @@
+{% extends './account.html' %}
+{% load static %}
+{% block account_content %}
+<div class='col-lg-12'>
+    <div class="product__details__last__option">
+        <h5><span>Ім'я : {{customer.first_name|title}}</span></h5>
+        <h5><span>Фамілія : {{customer.last_name|title}}</span></h5>
+        <h5><span>Мобільний телефон : {{customer.phone}}</span></h5>
+        <h5><span>Email : {{customer.email}}</span></h5>
+        <h5><span>Місто : {{customer.city|title}}</span></h5>
+    </div>
+    <div>
+        <h5 class="account_edit"><a href="{% url 'accounts:edit_information' %}">Редагувати данні <img
+                    src="{% static 'img/icon/edit.png' %}" alt=""></a></h5>
+    </div>
+</div>
+{% endblock account_content %}

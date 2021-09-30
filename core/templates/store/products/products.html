@@ -1,0 +1,168 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block content %}
+<!-- Shop Section Begin -->
+<section class="shop spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="shop__sidebar">
+                    <div class="shop__sidebar__search">
+                        <form action="{% url 'store:search' %}" method='POST'>{% csrf_token %}
+                            {{search_form.search_field}}
+                            <input type="submit" class="searsh_input" value="Пошук">
+                        </form>
+                    </div>
+                    <div class="shop__sidebar__accordion">
+                        <div class="accordion" id="accordionExample">
+                            <div class="card">
+                                <div class="card-heading">
+                                    <a data-toggle="collapse" data-target="#collapseOne">Категорія</a>
+                                </div>
+                                <div id="collapseOne" class="collapse" data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <div class="shop__sidebar__categories">
+                                            <ul class="nice-scroll">
+                                                {% for category in categories %}
+                                                <li><a href="{{category.get_absolute_url}}"
+                                                        class="category_name">{{category.name}}({{category.count}})</a>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-heading">
+                                    <a data-toggle="collapse" data-target="#collapseTwo">Бренд</a>
+                                </div>
+                                <div id="collapseTwo" class="collapse" data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <div class="shop__sidebar__brand">
+                                            <ul>
+                                                {% for brand in brands %}
+                                                <li><a href="{{brand.get_absolute_url}}">{{brand.name}}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-heading">
+                                    <a data-toggle="collapse" data-target="#collapseThree">Фільтр по ціні</a>
+                                </div>
+                                <div id="collapseThree" class="collapse" data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <div class="shop__sidebar__price">
+                                            <ul>
+                                                <li><a
+                                                        href="{% url 'store:product_list_by_price' min_price=0 max_price=500 %}">0
+                                                        грн - 500 грн</a></li>
+                                                <li><a
+                                                        href="{% url 'store:product_list_by_price' min_price=500 max_price=1000 %}">500
+                                                        грн - 1000 грн</a></li>
+                                                <li><a
+                                                        href="{% url 'store:product_list_by_price' min_price=1000 max_price=2000 %}">1000
+                                                        грн - 2000 грн</a></li>
+                                                <li><a
+                                                        href="{% url 'store:product_list_by_price' min_price=2000 max_price=5000 %}">2000
+                                                        грн - 5000 грн</a></li>
+                                                <li><a
+                                                        href="{% url 'store:product_list_by_price' min_price=5000 max_price=10000 %}">5000
+                                                        грн - 10000 грн</a></li>
+                                                <li><a
+                                                        href="{% url 'store:product_list_by_price' min_price=10000 max_price=99999 %}">10000грн
+                                                        +</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="shop__product__option">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="shop__product__option__left">
+                                <p>Показано {{products.end_index  }} продуктів із {{products.paginator.count }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    {% if products %}
+                    {% for product in products %}
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <form
+                            action="{% url 'cart:add_to_cart' ct_model=product.get_model_name product_slug=product.slug %}"
+                            method='POST'>{% csrf_token %}
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg"
+                                    data-setbg="{% if product.image %}{{product.image.url}}{% else %}{% static 'img/default/default.jpg'%}{% endif %}">
+                                    {% if product.discount_price %}
+                                    <span class="label"><b>Знижена ціна!</b></span>
+                                    {% endif %}
+                                    <ul class="product__hover">
+                                        <li><a
+                                                href="{% url 'wish:add_to_wish' ct_model=product.get_model_name product_slug=product.slug %}"><img
+                                                    src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
+                                        </li>
+                                        <li><a href="{{product.get_absolute_url}}"><img
+                                                    src="{% static 'img/icon/search.png' %}" alt=""></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6>{{product.name|title}} {{product.brand}}</h6>
+                                    <input style="color:red;" type="submit" class="btn add-cart"
+                                        value="+ Добавити в корзин">
+
+                                    <div class="rating">
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                    </div>
+                                    {% if product.discount_price %}
+                                    <h5>{{product.discount_price}} грн</h5>
+                                    {% else %}
+                                    <h5>{{product.price}} грн</h5>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <h1>Немає продуктів в наявності :(</h1>
+                    {% endif %}
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="product__pagination">
+                            {% if products.has_previous %}
+                            <a href="?page={{ products.previous_page_number }}">{{products.previous_page_number}}</a>
+                            {% endif %}
+                            <span class="current">
+                                <a href="" class="active">{{ products.number }}</a>
+                            </span>
+                            {% if products.has_next %}
+                            <a href="?page={{ products.next_page_number }}">{{ products.next_page_number }}</a>
+                            <span>...</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Shop Section End -->
+
+{% endblock content %}

@@ -1,0 +1,9 @@
+{% autoescape off %}
+
+Привіт, {{user.email}} !
+Твій акаунт був успішно створений, для активації перейди по силці внизу.
+
+http://{{domain}}{% url 'accounts:activate_account' uidb64=uidb token=token %}
+
+Якщо ти не створював акаунт на нашому сайті, можеш проігнорувати це повідомлення.
+{% endautoescape %}

@@ -1,0 +1,128 @@
+{% extends '../store/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <div class="breadcrumb__links">
+                        <h4>Корзина</h4>
+                        <a href="{% url 'store:home_page' %}">Головна</a>
+                        <a href="{% url 'store:products_list' %}">Продукти</a>
+                        <span>Корзина</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Breadcrumb Section End -->
+{% if request.user.is_authenticated %}
+<!-- Shopping Cart Section Begin -->
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="shopping__cart__table">
+                    <table>
+                        {% if cart.products.all %}
+                        <thead>
+                            <tr>
+                                <th>Продукт</th>
+                                <th>Кількість</th>
+                                <th>Всього</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart.products.all|dictsort:"content_object.price" %}
+                            <tr>
+                                <td class="product__cart__item">
+                                    <div class="product__cart__item__pic">
+                                        <img style="max-height:150px;"
+                                            src="{% if item.content_object.image %}{{item.content_object.image.url}}{% else %}{% static 'img/default/default.jpg'%}{% endif %}"
+                                            alt="">
+                                    </div>
+                                    <div class="product__cart__item__text">
+                                        <h6>{{item.content_object.name}} {{item.content_object.brand}}</h6>
+                                        {% if item.content_object.discount_price %}
+                                        <h5>{{item.content_object.discount_price}} грн</h5>
+                                        {% else %}
+                                        <h5>{{item.content_object.price}} грн</h5>
+                                        {% endif %}
+                                        <h6>Розмір: {{item.user_size_choice}}</h6>
+                                    </div>
+                                </td>
+                                <td class="quantity__item">
+                                    <div class="quantity">
+                                        <form
+                                            action="{% url 'cart:change_product_quantity' ct_model=item.content_object.get_model_name product_slug=item.content_object.slug %}"
+                                            method="POST">{% csrf_token %}
+                                            <div class="pro-qty-2">
+                                                <input type="text" name="product_quantity" value="{{item.quantity}}"
+                                                    min="1">
+                                            </div>
+                                            <input class='update_button' type="submit" value='Оновити' />
+
+                                        </form>
+                                    </div>
+                                </td>
+                                <td class="cart__price">{{item.final_price}} грн</td>
+                                <td class="cart__close"><a
+                                        href="{% url 'cart:delete_from_cart' ct_model=item.content_object.get_model_name product_slug=item.content_object.slug %}"><i
+                                            class="fa fa-close"></i></a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        {% else %}
+                        <h3>Корзина порожня.</h3>
+                        {% endif %}
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="continue__btn">
+                            <a href="{% url 'store:products_list' %}">Повернутися до продуктів</a>
+                        </div>
+                    </div>
+                    {% if cart.products.all %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cart__discount">
+                    <h6>Промокод</h6>
+                    <form action="{% url 'coupons:apply_coupon' %}" method="POST">{% csrf_token %}
+                       {{coupon_form.code}}
+                       <input  type="submit" class='cart__discount_button' value="Застосувати">
+                    </form>
+                </div>
+                <div class="cart__total">
+                    <h6>Загальна вартісь</h6>
+                    <ul>
+                        <li>Всього <span>{{cart.final_price}} грн.</span></li>
+                    </ul>
+                    <a href="{% url 'orders:checkout' %}" class="primary-btn">Оформити замовлення</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Корзина доступна лише для авторизованих користувачів.</h3>
+                <h6>Будь ласка, зайдіть в свій акаунт <a href="{% url 'accounts:login' %}">авторизуватися</a></h6>
+
+            </div>
+        </div>
+</section>
+{% endif %}
+{% endblock content %}

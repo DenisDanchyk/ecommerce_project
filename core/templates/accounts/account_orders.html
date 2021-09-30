@@ -1,0 +1,55 @@
+{% extends './account.html' %}
+{% load static %}
+
+{% block account_content %}
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shopping__cart__table">
+                    <hr>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Номер замовлення</th>
+                                <th>Статус</th>
+                                <th>Сумма</th>
+                                <th>Опис замовлення</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <td class="product__cart__item">
+                                    <div> #{{order.id}} </div>
+                                </td>
+                                <td>
+                                    {{order.get_status_display}}
+                                </td>
+                                <td class="cart__price">{{order.cart.final_price}} грн</td>
+                                <td class="order_desc">
+                                    <ul>
+                                        <li>Опис <img src="{% static 'img/icon/description.png' %}" alt="">
+                                            <ul class="dropdown">
+                                                {% for order_item in order_items %}
+                                                    {% if order_item.order == order %}
+                                                        <a href="{{order_item.content_object.get_absolute_url}}"> <h6>{{order_item.content_object}} x{{order_item.quantity}}  {{order_item.price}}грн</h6></a>
+                                                        <hr>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock account_content %}

@@ -1,0 +1,188 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Shop Details Section Begin -->
+<section class="shop-details">
+    <div class="product__details__pic">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="product__details__breadcrumb">
+                        <a href="{% url 'store:home_page' %}">Головна</a>
+                        <a href="{% url 'store:products_list' %}">Список продуктів</a>
+                        <span>{{product.name|title}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-9">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                            <div class="product__details__pic__item">
+                                <img src="{{product.image.url}}" alt="" width="500px" />
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="product__details__content">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-lg-8">
+                    <div class="product__details__text">
+                        <h4>{{product.name|title}}  {{product.brand|title}}</h4>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-o"></i>
+                            <span> - 5 Reviews</span>
+                        </div>
+                        {% if product.discount_price %}
+                        <h3>
+                            {{product.discount_price}} грн<span>{{product.price}} грн</span>
+                        </h3>
+                        {% else %}
+                        <h3>{{product.price}} грн</h3>
+                        {% endif %}
+                        <p>{{product.description}}.</p>
+
+                        <div class="product__details__cart__option">
+                            <form action="{% url 'cart:add_to_cart' ct_model=ct_model product_slug=product.slug %}"
+                                method="POST">
+                                {% csrf_token %}
+                                <span>Size:</span>
+                                <div class="product__details__option__size">
+                                    {% for size in product.available_size %}
+                                        
+                                    <label for="size_{{size}}">{{size}}
+                                        <input type="radio" name="add_product_size" id="size_{{size}}"
+                                            value="{{size}}" />
+                                    </label>
+
+                                    {% endfor %}
+                                </div>
+                                <div class="quantity">
+                                    <div class="pro-qty">
+                                        <input name="add_product_quantity" value="1" min="1" />
+                                    </div>
+                                </div>
+                                <input class="btn btn-danger" type="submit" value="Добавити в корзину" />
+                            </form>
+                        </div>
+                        <div class="product__details__btns__option">
+                            <a
+                                href="{% url 'wish:add_to_wish' ct_model=product.get_model_name product_slug=product.slug %}"><i
+                                    class="fa fa-heart"></i> Додати до бажаних товарів</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% if product.description %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="product__details__tab">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#tabs-5" role="tab">Опис</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tabs-5" role="tabpanel">
+                                <div class="product__details__tab__content">
+                                    <div class="product__details__tab__content__item">
+                                        {{product.description}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+<!-- Shop Details Section End -->
+
+{% if related_products %}
+<!-- Related Section Begin -->
+<section class="related spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="related-title">Похожі товари</h3>
+            </div>
+        </div>
+        <div class="row">
+            {% for related_product in related_products %}
+            <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
+                <div class="product__item">
+                    <form
+                        action="{% url 'cart:add_to_cart' ct_model=related_product.get_model_name product_slug=related_product.slug %}"
+                        method='POST'>{% csrf_token %}
+                        <div class="product__item">
+                            <div class="product__item__pic set-bg"
+                                data-setbg="{% if related_product.image %}{{related_product.image.url}}{% else %}{% static 'img/default/default.jpg'%}{% endif %}">
+                                {% if related_product.discount_price %}
+                                <span class="label"><b>Знижена ціна!</b></span>
+                                {% endif %}
+                                <ul class="product__hover">
+                                    <li><a
+                                            href="{% url 'wish:add_to_wish' ct_model=related_product.get_model_name product_slug=related_product.slug %}"><img
+                                                src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
+                                    </li>
+                                    <li><a href="{{product.get_absolute_url}}"><img
+                                                src="{% static 'img/icon/search.png' %}" alt=""></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="product__item__text">
+                                <h6>{{related_product.name|title}} {{related_product.brand}}</h6>
+                                <input style="color:red;" type="submit" class="btn add-cart"
+                                    value="+ Добавити в корзин">
+
+                                <div class="rating">
+                                    <i class="fa fa-star-o"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <i class="fa fa-star-o"></i>
+                                </div>
+                                {% if related_product.discount_price %}
+                                <h5>{{related_product.discount_price}} грн</h5>
+                                {% else %}
+                                <h5>{{related_product.price}} грн</h5>
+                                {% endif %}
+                                {% comment %} <div class="product__color__select">
+                                    <label for="pc-4">
+                                        <input type="radio" id="pc-4">
+                                    </label>
+                                    <label class="active black" for="pc-5">
+                                        <input type="radio" id="pc-5">
+                                    </label>
+                                    <label class="grey" for="pc-6">
+                                        <input type="radio" id="pc-6">
+                                    </label>
+                                </div> {% endcomment %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- Related Section End -->
+{% endif %}
+
+
+
+{% endblock content %}
