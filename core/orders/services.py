@@ -1,5 +1,4 @@
-from cart.services import (get_cart_products)
-
+from cart.services import CustomerCart
 
 from .models import Order, OrderItem
 
@@ -24,7 +23,7 @@ def get_order_items():
 def create_order(form, cart, customer):
     """ Create order """
 
-    cart_products = get_cart_products(cart=cart)
+    cart_products = CustomerCart.get_cart_products(cart=cart)
 
     if form.is_valid() and cart_products:
         order = _create_order_data(form=form, cart=cart, customer=customer)

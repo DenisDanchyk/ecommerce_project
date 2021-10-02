@@ -4,12 +4,9 @@ from django.contrib import messages
 from django.views.generic import View
 
 from coupons.forms import CouponApplyForm
-from cart.services import add_product_to_cart
 
 from .mixins import CartMixin
-from .services import (get_or_create_cart_product, get_cart_product,
-                       remove_product_from_cart, change_product_quantity,
-                       recal_total_products_in_cart)
+from .services import CustomerCart
 
 
 class AddToCartView(CartMixin, View):
@@ -21,13 +18,13 @@ class AddToCartView(CartMixin, View):
                                  "Добавлення товару до корзини доступно лише авторизованим користувачам!")
             return redirect('store:products_list')
 
-        cart_product, create = get_or_create_cart_product(
+        cart_product, create = CustomerCart.get_or_create_cart_product(
             kwargs, cart=self.cart)
-        add_product_to_cart(request, cart=self.cart,
+        CustomerCart.add_product_to_cart(self=CustomerCart, request=request,
                             cart_product=cart_product, create=create)
         self.cart.save()
 
-        recal_total_products_in_cart(self.cart)
+        CustomerCart.recal_total_products_in_cart(self=CustomerCart, cart=self.cart)
         messages.add_message(request, messages.SUCCESS,
                              "Товар успішно додано в корзину")
         return redirect('store:products_list')
@@ -38,12 +35,13 @@ class DeleteFromCartView(CartMixin, View):
 
     def get(self, request, **kwargs):
 
-        cart_product = get_cart_product(
+        cart_product = CustomerCart.get_cart_product(
             kwargs, cart=self.cart
         )
 
-        remove_product_from_cart(cart=self.cart, cart_product=cart_product)
-        recal_total_products_in_cart(cart=self.cart)
+        CustomerCart.remove_product_from_cart(
+            self=CustomerCart, cart_product=cart_product)
+        CustomerCart.recal_total_products_in_cart(self=CustomerCart, cart=self.cart)
         messages.add_message(request, messages.WARNING,
                              "Товар успішно видалено з корзини")
         return HttpResponseRedirect('/cart/')
@@ -53,13 +51,13 @@ class ChangeQuantityView(CartMixin, View):
     """ Change product quantity in customer cart """
 
     def post(self, request, **kwargs):
-        cart_product = get_cart_product(
+        cart_product = CustomerCart.get_cart_product(
             kwargs, cart=self.cart
         )
 
-        change_product_quantity(
-            request, cart_product=cart_product, cart=self.cart)
-        recal_total_products_in_cart(self.cart)
+        CustomerCart.change_product_quantity(
+            self=CustomerCart, request=request, cart_product=cart_product)
+        CustomerCart.recal_total_products_in_cart(self=CustomerCart, cart=self.cart)
         messages.add_message(request, messages.INFO,
                              "Кількість товару успішно змінено!")
         return HttpResponseRedirect('/cart/')

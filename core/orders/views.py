@@ -4,7 +4,7 @@ from django.views.generic import View
 
 from cart.mixins import CartMixin
 from accounts.services import CustomerAccount
-from cart.services import get_cart_products, get_customer_cart
+from cart.services import CustomerCart
 
 from .services import create_order
 from .forms import OrderForm
@@ -15,8 +15,8 @@ class CheckoutView(View):
 
     def get(self, request):
         form = OrderForm(request.POST)
-        cart = get_customer_cart(request)
-        cart_products = get_cart_products(cart=cart)
+        cart = CustomerCart.get_customer_cart(request)
+        cart_products = CustomerCart.get_cart_products(cart=cart)
 
         return render(request, 'orders/checkout.html', {'form': form,
                                                         'cart_products': cart_products,

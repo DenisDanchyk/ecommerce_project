@@ -11,7 +11,7 @@ from .services import CustomerAccount
 
 
 from orders.services import (get_user_orders, get_order_items)
-from cart.services import get_customer_in_order_carts
+from cart.services import CustomerCart
 
 
 @method_decorator(login_required, name='dispatch')
@@ -51,7 +51,7 @@ class AccountPersonalOrders(View):
 
     def get(self, request):
         customer = CustomerAccount.get_customer_account(request)
-        carts = get_customer_in_order_carts(customer=customer)
+        carts = CustomerCart.get_customer_in_order_carts(customer=customer)
         orders = get_user_orders(customer=customer, cart=carts)
         order_items = get_order_items()
         return render(request, 'accounts/account_orders.html', {'orders': orders, 'order_items': order_items})
