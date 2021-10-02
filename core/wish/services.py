@@ -1,4 +1,4 @@
-from accounts.services import get_customer_account
+from accounts.services import CustomerAccount
 
 from store.services import _get_content_type, _get_product
 
@@ -8,7 +8,7 @@ from .models import Wish, WishProduct
 def get_or_create_wish(request):
     """ Get or create wish for customer """
 
-    customer = get_customer_account(request)
+    customer = CustomerAccount.get_customer_account(request)
     wish = _get_customer_wish(customer=customer)
     if not wish:
         wish = _create_customer_wish(customer=customer)

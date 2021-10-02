@@ -1,8 +1,10 @@
-from accounts.services import *
+from django.db import models
+
+
+from accounts.services import CustomerAccount
 from store.services import _get_product, _get_content_type
 
 from .models import CartProduct, Cart
-from django.db import models
 
 
 def get_customer_cart(request):
@@ -12,7 +14,7 @@ def get_customer_cart(request):
     return cart
 
 
-def get_customer_order_carts(customer):
+def get_customer_in_order_carts(customer):
     """ Get customer cart that have in_order=True """
 
     carts = Cart.objects.filter(owner=customer)

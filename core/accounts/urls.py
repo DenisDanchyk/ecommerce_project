@@ -7,8 +7,8 @@ from .forms import UserLoginForm
 app_name = 'accounts'
 
 urlpatterns = [
-    path('', views.account, name='account'),
-    path('personal_information/', views.account_personal_information, name='personal_information'),
+    path('', views.AccountPage.as_view(), name='account'),
+    path('personal_information/', views.AccountPersonalInformation.as_view(), name='personal_information'),
     path('personal_orders/', views.AccountPersonalOrders.as_view(), name='personal_orders'),
     path('edit_information/', views.EditPersonalInformation.as_view(), name='edit_information'),
 
