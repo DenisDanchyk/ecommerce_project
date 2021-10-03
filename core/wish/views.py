@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.contrib import messages
 
+from store.services import ProductSystem
+
 from .mixins import WishMixin
 from .services import (get_or_create_wish_product, add_product_to_wish,
                        save_wish, get_wish_product, remove_wish_product)
@@ -17,7 +19,7 @@ class AddToWishView(WishMixin, View):
                                  "Добавлення товару до списку бажаних товарів доступно лише авторизованим користувачам!")
             return redirect('store:products_list')
         wish_product, create = get_or_create_wish_product(
-            kwargs, wish=self.wish
+            self=ProductSystem, wish=self.wish, kwargs=kwargs
         )
         if create:
             add_product_to_wish(wish=self.wish, wish_product=wish_product)
@@ -34,9 +36,10 @@ class AddToWishView(WishMixin, View):
 class DeleteWishView(WishMixin, View):
     """ Delete product from wish """
 
-    def get(self, request):
+    def get(self, request, kwargs):
         wish_product = get_wish_product(
-            wish=self.wish
+            self=ProductSystem,
+            wish=self.wish, **kwargs
         )
         remove_wish_product(wish=self.wish, wish_product=wish_product)
         save_wish(wish=self.wish)

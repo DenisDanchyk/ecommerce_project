@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect, redirect
 from django.contrib import messages
 
 from django.views.generic import View
+from store.services import ProductSystem
 
 from coupons.forms import CouponApplyForm
 
@@ -19,12 +20,14 @@ class AddToCartView(CartMixin, View):
             return redirect('store:products_list')
 
         cart_product, create = CustomerCart.get_or_create_cart_product(
-            kwargs, cart=self.cart)
+            self=ProductSystem,
+            cart=self.cart, kwargs=kwargs)
         CustomerCart.add_product_to_cart(self=CustomerCart, request=request,
-                            cart_product=cart_product, create=create)
+                                         cart_product=cart_product, create=create)
         self.cart.save()
 
-        CustomerCart.recal_total_products_in_cart(self=CustomerCart, cart=self.cart)
+        CustomerCart.recal_total_products_in_cart(
+            self=CustomerCart, cart=self.cart)
         messages.add_message(request, messages.SUCCESS,
                              "Товар успішно додано в корзину")
         return redirect('store:products_list')
@@ -36,12 +39,14 @@ class DeleteFromCartView(CartMixin, View):
     def get(self, request, **kwargs):
 
         cart_product = CustomerCart.get_cart_product(
-            kwargs, cart=self.cart
+            self=ProductSystem,
+            cart=self.cart, kwargs=kwargs
         )
 
         CustomerCart.remove_product_from_cart(
             self=CustomerCart, cart_product=cart_product)
-        CustomerCart.recal_total_products_in_cart(self=CustomerCart, cart=self.cart)
+        CustomerCart.recal_total_products_in_cart(
+            self=CustomerCart, cart=self.cart)
         messages.add_message(request, messages.WARNING,
                              "Товар успішно видалено з корзини")
         return HttpResponseRedirect('/cart/')
@@ -52,12 +57,13 @@ class ChangeQuantityView(CartMixin, View):
 
     def post(self, request, **kwargs):
         cart_product = CustomerCart.get_cart_product(
-            kwargs, cart=self.cart
+            self=ProductSystem, cart=self.cart, kwargs=kwargs
         )
 
         CustomerCart.change_product_quantity(
             self=CustomerCart, request=request, cart_product=cart_product)
-        CustomerCart.recal_total_products_in_cart(self=CustomerCart, cart=self.cart)
+        CustomerCart.recal_total_products_in_cart(
+            self=CustomerCart, cart=self.cart)
         messages.add_message(request, messages.INFO,
                              "Кількість товару успішно змінено!")
         return HttpResponseRedirect('/cart/')

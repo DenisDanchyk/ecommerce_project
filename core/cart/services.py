@@ -1,7 +1,7 @@
 from django.db import models
 
 from accounts.services import CustomerAccount
-from store.services import _get_product, _get_content_type
+from store.services import ProductSystem
 
 from .models import CartProduct, Cart
 
@@ -46,21 +46,21 @@ class CustomerCart:
         cart_products = CartProduct.objects.all().filter(cart=cart)
         return cart_products
 
-    def get_or_create_cart_product(kwargs, cart):
+    def get_or_create_cart_product(self, cart, kwargs):
         """ Get or create product for cart """
 
-        product = _get_product(kwargs)
-        content_type = _get_content_type(kwargs)
+        product = ProductSystem._get_product(self, kwargs=kwargs)
+        content_type = ProductSystem._get_content_type(kwargs=kwargs)
         cart_product, create = CartProduct.objects.get_or_create(
             user=cart.owner, cart=cart, content_type=content_type, object_id=product.id,
         )
         return cart_product, create
 
-    def get_cart_product(kwargs, cart):
+    def get_cart_product(self, cart, kwargs):
         """ Get product for cart """
 
-        product = _get_product(kwargs)
-        content_type = _get_content_type(kwargs)
+        product = ProductSystem._get_product(self, kwargs=kwargs)
+        content_type = ProductSystem._get_content_type(kwargs=kwargs)
         cart_product = CartProduct.objects.get(
             user=cart.owner, cart=cart, content_type=content_type, object_id=product.id,
         )

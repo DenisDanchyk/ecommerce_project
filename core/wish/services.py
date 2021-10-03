@@ -1,6 +1,6 @@
 from accounts.services import CustomerAccount
 
-from store.services import _get_content_type, _get_product
+from store.services import ProductSystem
 
 from .models import Wish, WishProduct
 
@@ -24,11 +24,11 @@ def get_or_create_wish_for_anonymos():
     return wish
 
 
-def get_or_create_wish_product(kwargs, wish):
+def get_or_create_wish_product(self, wish, **kwargs):
     """ Get or create wish product """
 
-    content_type = _get_content_type(kwargs)
-    product = _get_product(kwargs)
+    content_type = ProductSystem._get_content_type(kwargs=kwargs)
+    product = ProductSystem._get_product(self, kwargs=kwargs)
 
     wish_product, create = WishProduct.objects.get_or_create(
         user=wish.owner, wish=wish, content_type=content_type, object_id=product.id
@@ -37,11 +37,11 @@ def get_or_create_wish_product(kwargs, wish):
     return wish_product, create
 
 
-def get_wish_product(wish):
+def get_wish_product(self, wish, **kwargs):
     """ Get wish product """
 
-    content_type = _get_content_type
-    product = _get_product
+    content_type = ProductSystem._get_content_type(kwargs=kwargs)
+    product = ProductSystem._get_product(self, kwargs=kwargs)
     wish_product = WishProduct.objects.get(
         user=wish.owner, wish=wish, content_type=content_type, object_id=product.id
     )
