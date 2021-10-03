@@ -1,6 +1,6 @@
 from django.views.generic import View
 
-from .services import get_or_create_wish, get_or_create_wish_for_anonymos
+from .services import WishSystem
 
 
 class WishMixin(View):
@@ -8,8 +8,9 @@ class WishMixin(View):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            wish = get_or_create_wish(request)
+            wish = WishSystem.get_or_create_wish(
+                self=WishSystem, request=request)
         else:
-            wish = get_or_create_wish_for_anonymos()
+            wish = WishSystem.get_or_create_wish_for_anonymos(self=WishSystem)
         self.wish = wish
         return super().dispatch(request, *args, **kwargs)
