@@ -1,7 +1,7 @@
 from decimal import Decimal
 from django.utils import timezone
 
-from cart.services import CustomerCart
+from cart.services import CartSystem
 
 from .models import Coupon
 
@@ -17,9 +17,9 @@ class CouponSystem:
             code = form.cleaned_data['code']
             try:
                 coupon = self._get_coupon(code=code, now=now)
-                cart = CustomerCart.get_customer_cart(request)
+                cart = CartSystem.get_customer_cart(request)
                 self._make_coupon_discount(cart=cart, coupon=coupon)
-                CustomerCart.save_cart(cart=cart)
+                CartSystem.save_cart(cart=cart)
                 return True
             except Coupon.DoesNotExist:
                 return False

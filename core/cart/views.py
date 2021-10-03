@@ -7,7 +7,7 @@ from store.services import ProductSystem
 from coupons.forms import CouponApplyForm
 
 from .mixins import CartMixin
-from .services import CustomerCart
+from .services import CartSystem
 
 
 class AddToCartView(CartMixin, View):
@@ -19,15 +19,15 @@ class AddToCartView(CartMixin, View):
                                  "Добавлення товару до корзини доступно лише авторизованим користувачам!")
             return redirect('store:products_list')
 
-        cart_product, create = CustomerCart.get_or_create_cart_product(
+        cart_product, create = CartSystem.get_or_create_cart_product(
             self=ProductSystem,
             cart=self.cart, kwargs=kwargs)
-        CustomerCart.add_product_to_cart(self=CustomerCart, request=request,
+        CartSystem.add_product_to_cart(self=CartSystem, request=request,
                                          cart_product=cart_product, create=create)
-        self.cart.save()
+        CartSystem.save_cart(cart=self.cart)
 
-        CustomerCart.recal_total_products_in_cart(
-            self=CustomerCart, cart=self.cart)
+        CartSystem.recal_total_products_in_cart(
+            self=CartSystem, cart=self.cart)
         messages.add_message(request, messages.SUCCESS,
                              "Товар успішно додано в корзину")
         return redirect('store:products_list')
@@ -38,15 +38,15 @@ class DeleteFromCartView(CartMixin, View):
 
     def get(self, request, **kwargs):
 
-        cart_product = CustomerCart.get_cart_product(
+        cart_product = CartSystem.get_cart_product(
             self=ProductSystem,
             cart=self.cart, kwargs=kwargs
         )
 
-        CustomerCart.remove_product_from_cart(
-            self=CustomerCart, cart_product=cart_product)
-        CustomerCart.recal_total_products_in_cart(
-            self=CustomerCart, cart=self.cart)
+        CartSystem.remove_product_from_cart(
+            self=CartSystem, cart_product=cart_product)
+        CartSystem.recal_total_products_in_cart(
+            self=CartSystem, cart=self.cart)
         messages.add_message(request, messages.WARNING,
                              "Товар успішно видалено з корзини")
         return HttpResponseRedirect('/cart/')
@@ -56,14 +56,14 @@ class ChangeQuantityView(CartMixin, View):
     """ Change product quantity in customer cart """
 
     def post(self, request, **kwargs):
-        cart_product = CustomerCart.get_cart_product(
+        cart_product = CartSystem.get_cart_product(
             self=ProductSystem, cart=self.cart, kwargs=kwargs
         )
 
-        CustomerCart.change_product_quantity(
-            self=CustomerCart, request=request, cart_product=cart_product)
-        CustomerCart.recal_total_products_in_cart(
-            self=CustomerCart, cart=self.cart)
+        CartSystem.change_product_quantity(
+            self=CartSystem, request=request, cart_product=cart_product)
+        CartSystem.recal_total_products_in_cart(
+            self=CartSystem, cart=self.cart)
         messages.add_message(request, messages.INFO,
                              "Кількість товару успішно змінено!")
         return HttpResponseRedirect('/cart/')

@@ -11,8 +11,8 @@ from .models import UserBase
 from .token import account_activation_token
 
 
-class CustomerAccount:
-    """ CustomerAccount class for manipulate with customer account  """
+class AccountSystem:
+    """ Manipulate with customer account  """
 
     def registration(self, request, form):
         """ Registration customer account """

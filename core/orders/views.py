@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import View
 
 from cart.mixins import CartMixin
-from cart.services import CustomerCart
+from cart.services import CartSystem
 
 from .services import OrderSystem
 from .forms import OrderForm
@@ -13,8 +13,8 @@ class CheckoutView(View):
 
     def get(self, request):
         form = OrderForm(request.POST)
-        cart = CustomerCart.get_customer_cart(request)
-        cart_products = CustomerCart.get_cart_products(cart=cart)
+        cart = CartSystem.get_customer_cart(request)
+        cart_products = CartSystem.get_cart_products(cart=cart)
 
         return render(request, 'orders/checkout.html', {'form': form,
                                                         'cart_products': cart_products,

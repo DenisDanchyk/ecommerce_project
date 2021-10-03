@@ -1,12 +1,12 @@
 from django.db import models
 
-from accounts.services import CustomerAccount
+from accounts.services import AccountSystem
 from store.services import ProductSystem
 
 from .models import CartProduct, Cart
 
 
-class CustomerCart:
+class CartSystem:
     """ Manipulate with customer cart """
 
     def get_customer_cart(request):
@@ -72,11 +72,13 @@ class CustomerCart:
         cart = cart_product.cart
         if create:
             if request.POST.get('add_product_quantity'):
-                self._add_product_quantity(request, cart_product=cart_product)
+                self._add_product_quantity(
+                    request, cart_product=cart_product, create=create)
             cart.products.add(cart_product)
         else:
             if request.POST.get('add_product_quantity'):
-                self._add_product_quantity(request, cart_product=cart_product)
+                self._add_product_quantity(
+                    request, cart_product=cart_product, create=create)
             else:
                 cart_product.quantity += 1
         self._add_product_size(request, cart_product=cart_product)
@@ -122,11 +124,18 @@ class CustomerCart:
 
         cart.save()
 
-    def _add_product_quantity(request, cart_product):
+    def _add_product_quantity(request, cart_product, create):
         """ Add product quantity to cart product"""
 
-        add_product_quantity = int(request.POST.get('add_product_quantity'))
-        cart_product.quantity += add_product_quantity
+        if create:
+            add_product_quantity = int(
+                request.POST.get('add_product_quantity'))
+            cart_product.quantity += add_product_quantity - 1
+
+        else:
+            add_product_quantity = int(
+                request.POST.get('add_product_quantity'))
+            cart_product.quantity += add_product_quantity
 
     def _add_product_size(request, cart_product):
         """ Set product size """
@@ -144,6 +153,6 @@ class CustomerCart:
     def _create_customer_cart(self, request):
         """ Create cart for customer """
 
-        customer = CustomerAccount.get_customer_account(request)
+        customer = AccountSystem.get_customer_account(request)
         cart = Cart.objects.create(owner=customer)
         return cart

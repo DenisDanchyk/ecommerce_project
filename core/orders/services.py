@@ -1,4 +1,4 @@
-from cart.services import CustomerCart
+from cart.services import CartSystem
 
 from .models import Order, OrderItem
 
@@ -24,7 +24,7 @@ class OrderSystem:
     def create_order(self, form, cart):
         """ Create order """
 
-        cart_products = CustomerCart.get_cart_products(cart=cart)
+        cart_products = CartSystem.get_cart_products(cart=cart)
         customer = cart.owner
 
         if form.is_valid() and cart_products:
