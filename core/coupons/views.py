@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.views.generic import View
 
 from . import forms
-from .services import coupon_activation
+from .services import CouponSystem
 
 
 class ApplyCouponView(View):
@@ -11,7 +11,8 @@ class ApplyCouponView(View):
 
     def post(self, request):
         form = forms.CouponApplyForm(request.POST)
-        success = coupon_activation(request, form=form)
+        success = CouponSystem.coupon_activation(
+            self=CouponSystem, request=request, form=form)
         if success:
             messages.add_message(request, messages.INFO,
                                  "Купон успішно застосовано!")

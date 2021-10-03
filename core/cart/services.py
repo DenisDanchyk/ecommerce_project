@@ -9,7 +9,7 @@ from .models import CartProduct, Cart
 class CustomerCart:
     """ Manipulate with customer cart """
 
-    def get_customer_cart(self, request):
+    def get_customer_cart(request):
         """ Get customer cart """
 
         cart = Cart.objects.get(owner=request.user, in_order=False)
@@ -25,7 +25,7 @@ class CustomerCart:
         """ Get or create customer cart """
 
         if request.user.is_authenticated:
-            cart = self.get_customer_cart(self, request)
+            cart = self.get_customer_cart(request)
             if not cart:
                 cart = self._create_customer_cart(request)
         else:
