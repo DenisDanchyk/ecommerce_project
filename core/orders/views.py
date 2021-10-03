@@ -1,12 +1,10 @@
 from django.shortcuts import render
-
 from django.views.generic import View
 
 from cart.mixins import CartMixin
-from accounts.services import CustomerAccount
 from cart.services import CustomerCart
 
-from .services import create_order
+from .services import OrderSystem
 from .forms import OrderForm
 
 
@@ -28,8 +26,8 @@ class CreateOrderView(CartMixin, View):
 
     def post(self, request):
         form = OrderForm(request.POST)
-        customer = CustomerAccount.get_customer_account(request)
-        success = create_order(form=form, cart=self.cart, customer=customer)
+        success = OrderSystem.create_order(self=OrderSystem, form=form,
+                                           cart=self.cart)
         if success:
             return render(request, 'orders/order_valid.html')
         else:
