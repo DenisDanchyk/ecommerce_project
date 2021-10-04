@@ -149,7 +149,13 @@ LOGGING = {
         'registration': {
             'level': 'WARNING',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'log.log'),
+            'filename': os.path.join(BASE_DIR, 'registration.log'),
+            'formatter': 'myformatter'
+        },
+        'make_order': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'orders.log'),
             'formatter': 'myformatter'
         },
     },
@@ -159,5 +165,10 @@ LOGGING = {
             'level': 'WARNING',
             'propagate': True,
         },
+        'orders':{
+            'handlers': ['make_order'],
+            'level': 'WARNING',
+            'propagate': True,
+        }
     }
 }

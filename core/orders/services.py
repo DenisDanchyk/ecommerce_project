@@ -1,7 +1,9 @@
+import logging
 from cart.services import CartSystem
 
 from .models import Order, OrderItem
 
+logger = logging.getLogger(__name__)
 
 class OrderSystem:
     """ Manipulate with customer orders """
@@ -34,8 +36,9 @@ class OrderSystem:
 
             cart.in_order = True
             cart.save()
-            return order
-        return False
+        else:
+            logger.warning('Invalid order data')
+        return form
 
     def _create_order_data(form, cart, customer):
         """ Create order data """

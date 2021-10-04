@@ -22,6 +22,15 @@
 <!-- Checkout Section Begin -->
 <section class="checkout spad">
     <div class="container">
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
         <div class="checkout__form">
             <form action="{% url 'orders:create_order' %}" method="POST">{% csrf_token %}
                 <div class="row">

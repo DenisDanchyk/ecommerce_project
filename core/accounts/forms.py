@@ -13,7 +13,7 @@ class UserLoginForm(AuthenticationForm):
 
 class RegistrationForm(forms.ModelForm):
     phone = PhoneNumberField(widget=forms.TextInput(
-        attrs={'placeholder': '+380(11)9999999', 'maxlength': 18}))
+        attrs={'placeholder': '+380(11)9999999', 'maxlength': 15}))
     phone.error_messages['invalid'] = 'Введіть коректний номер телефону (наприклад, +380(11)9999999).'
 
     password = forms.CharField(widget=forms.PasswordInput)
