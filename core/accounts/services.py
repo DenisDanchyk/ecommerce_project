@@ -1,3 +1,4 @@
+import logging
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
@@ -11,6 +12,8 @@ from .models import UserBase
 from .token import account_activation_token
 
 
+logger = logging.getLogger(__name__)
+
 class AccountSystem:
     """ Manipulate with customer account  """
 
@@ -20,6 +23,9 @@ class AccountSystem:
         if form.is_valid():
             user = self._create_account_data(form=form)
             self._activation_account_using_email(request, user=user)
+        else:
+            logger.warning("Invalid user data")
+        return form
 
     def activation_customer_account(request, user):
         """ Activation customer account """

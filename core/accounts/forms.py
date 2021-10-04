@@ -14,6 +14,7 @@ class UserLoginForm(AuthenticationForm):
 class RegistrationForm(forms.ModelForm):
     phone = PhoneNumberField(widget=forms.TextInput(
         attrs={'placeholder': '+380(11)9999999', 'maxlength': 18}))
+    phone.error_messages['invalid'] = 'Введіть коректний номер телефону (наприклад, +380(11)9999999).'
 
     password = forms.CharField(widget=forms.PasswordInput)
     password2 = forms.CharField(widget=forms.PasswordInput)
@@ -45,6 +46,9 @@ class RegistrationForm(forms.ModelForm):
             raise forms.ValidationError(
                 "Акаунт з таким електронним адресом вже існує!")
         return email
+
+
+
 
 
 class EditPersonalInformationForm(forms.ModelForm):

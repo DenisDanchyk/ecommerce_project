@@ -135,3 +135,29 @@ EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 
 PRODUCT_MODELS = 'clothesproduct', 'shoesproduct', 'bagproduct', 'accessoriesproduct'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'myformatter': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'registration': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'log.log'),
+            'formatter': 'myformatter'
+        },
+    },
+    'loggers': {
+        'accounts': {
+            'handlers': ['registration'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+    }
+}

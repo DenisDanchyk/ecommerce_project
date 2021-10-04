@@ -62,9 +62,13 @@ class AccountRegistrationView(View):
 
     def post(self, request):
         form = RegistrationForm(request.POST)
-        AccountSystem.registration(
+        form = AccountSystem.registration(
             self=AccountSystem, request=request, form=form)
-        return render(request, 'accounts/registration/registration_valid.html')
+        if form.errors:
+            return render(request, 'accounts/registration/registration.html', {'form': form})
+        else:
+            return render(request, 'accounts/registration/registration_valid.html')
+
 
     def get(self, request):
         if request.user.is_authenticated:
