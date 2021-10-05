@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.core.mail import send_mail
 
 from phonenumber_field.modelfields import PhoneNumberField
+from cities_light.models import City
 
 from orders.models import *
 
@@ -48,7 +49,7 @@ class UserBase(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(
         max_length=150, blank=True, verbose_name="Фамілія")
 
-    city = models.CharField(max_length=150, blank=True, verbose_name="Місто")
+    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, verbose_name="Місто")
 
     orders = models.ManyToManyField(
         'orders.Order', related_name="related_order", verbose_name="Замовлення покупця", blank=True)

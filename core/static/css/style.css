@@ -2501,6 +2501,10 @@ ol {
 	position: relative;
 	display: inline-block;
 }
+.dropdown-cities{
+    height: 350px;
+    overflow-x: hidden;
+}
 
 .dropdown-content {
 	display: none;

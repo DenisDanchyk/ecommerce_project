@@ -13,7 +13,7 @@ class UserLoginForm(AuthenticationForm):
 
 class RegistrationForm(forms.ModelForm):
     phone = PhoneNumberField(widget=forms.TextInput(
-        attrs={'placeholder': '+380(11)9999999', 'maxlength': 15}))
+        attrs={'placeholder': '+380(11)9999999', 'maxlength': 18}))
     phone.error_messages['invalid'] = 'Введіть коректний номер телефону (наприклад, +380(11)9999999).'
 
     password = forms.CharField(widget=forms.PasswordInput)
@@ -32,7 +32,7 @@ class RegistrationForm(forms.ModelForm):
                 attrs={'placeholder': 'Тестов', 'maxlength': 30}
             ),
         }
-        fields = ('email', 'first_name', 'last_name', 'city',)
+        fields = ('email', 'first_name', 'last_name', 'city')
 
     def clean_password2(self):
         if self.cleaned_data['password'] != self.cleaned_data['password2']:
@@ -46,8 +46,6 @@ class RegistrationForm(forms.ModelForm):
             raise forms.ValidationError(
                 "Акаунт з таким електронним адресом вже існує!")
         return email
-
-
 
 
 

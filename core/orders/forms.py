@@ -6,7 +6,7 @@ from orders.models import Order
 
 class OrderForm(forms.ModelForm):
     phone = PhoneNumberField(widget=forms.TextInput(
-        attrs={'placeholder': '+380(11)9999999', 'maxlength': 13}))
+        attrs={'placeholder': '+380(11)9999999', 'maxlength': 16}))
     phone.error_messages[
         'invalid'] = 'Введіть коректний номер телефону (наприклад, +380(11)9999999).'
 
@@ -22,9 +22,6 @@ class OrderForm(forms.ModelForm):
             'email': forms.TextInput(
                 attrs={'placeholder': 'Email', 'maxlenght': 50}
             ),
-            'city': forms.TextInput(
-                attrs={'placeholder': 'Місто', 'maxlenght': 30}
-            ),
             'post_office': forms.TextInput(
                 attrs={'placeholder': 'Номер пошти', 'maxlenght': 4}
             ),
@@ -36,11 +33,11 @@ class OrderForm(forms.ModelForm):
         fields = ('first_name', 'last_name', 'phone',
                   'email', 'city', 'post_office', 'comment')
 
-
     def clean_post_office(self):
-        post_office = self.cleaned_data['post_office'].lower()
+        post_office = self.cleaned_data['post_office']
         for i in post_office:
-            if not isinstance(i, int):
+            if not isinstance(int(i), int):
+                print(i)
                 raise forms.ValidationError(
-                "Номер пошти повинен складатися лише з цифр!")
+                    "Номер пошти повинен складатися лише з цифр!")
         return post_office

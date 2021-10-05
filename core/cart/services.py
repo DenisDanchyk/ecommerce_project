@@ -144,7 +144,7 @@ class CartSystem:
             product_size = request.POST.get('add_product_size')
             cart_product.user_size_choice = product_size
 
-    def _create_cart_for_anonymos(self):
+    def _create_cart_for_anonymos():
         """ Create cart for anonymos customer """
 
         cart = Cart.objects.create(for_anonymos_user=True)

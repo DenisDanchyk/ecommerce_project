@@ -4,6 +4,8 @@ from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
+from cities_light.models import City
+
 from cart.models import *
 from accounts.models import *
 
@@ -49,7 +51,7 @@ class Order(models.Model):
     first_name = models.CharField(max_length=255,  verbose_name="Ім'я")
     last_name = models.CharField(max_length=255,  verbose_name="Фамілія")
     phone = models.CharField(max_length=255,  verbose_name="Номер телефону")
-    city = models.CharField(max_length=255, verbose_name="Місто")
+    city = models.ForeignKey(City, on_delete=models.CASCADE, verbose_name="Місто")
     post_office = models.CharField(
         max_length=255, verbose_name="Вдділення пошти")
     email = models.EmailField()

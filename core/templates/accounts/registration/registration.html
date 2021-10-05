@@ -18,10 +18,6 @@
                         {% endif %}
                         <h6 class="checkout__title">Ваші данні</h6>
 
-                        <div class="checkout__input">
-                            <p>Email<span>*</span></p>
-                            {{form.email}}
-                        </div>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="checkout__input">
@@ -39,34 +35,30 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="checkout__input">
+                                    <p>Email<span>*</span></p>
+                                    {{form.email}}
+                                </div>
+                                <div class="checkout__input">
                                     <p>Ваш номер телефону</p>
                                     {{form.phone}}
                                 </div>
-
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="checkout__input">
-                                    <p>Ваше місто</p>
-                                    {{form.city}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Пароль<span>*</span></p>
                                     {{form.password}}
                                 </div>
-                            </div>
-                            <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Повторіть пароль<span>*</span></p>
                                     {{form.password2}}
                                 </div>
                             </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input dropdown-cities">
+                                    <p>Ваше місто</p>
+                                    {{form.city}}
+                                </div>
+                            </div>
                         </div>
-
-                        <input type="submit"  class="site-btn" value="Створити акаунт">
+                        <input type="submit" class="site-btn" value="Створити акаунт">
                     </div>
                 </div>
             </form>

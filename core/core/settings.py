@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'coupons.apps.CouponsConfig',
 
     'phonenumber_field',
+    'cities_light'
 ]
 
 MIDDLEWARE = [
@@ -172,3 +173,8 @@ LOGGING = {
         }
     }
 }
+
+
+CITIES_LIGHT_TRANSLATION_LANGUAGES = ['ua']
+CITIES_LIGHT_INCLUDE_COUNTRIES = ['UA']
+CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPL', 'PPLA', 'PPLA2', 'PPLA3', 'PPLA4', 'PPLC', 'PPLF', 'PPLG', 'PPLL', 'PPLR', 'PPLS', 'STLMT',]
