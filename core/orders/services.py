@@ -1,4 +1,5 @@
 import logging
+
 from cart.services import CartSystem
 
 from .models import Order, OrderItem
@@ -28,17 +29,20 @@ class OrderSystem:
 
         cart_products = CartSystem.get_cart_products(cart=cart)
         customer = cart.owner
+        success = False
 
-        if form.is_valid() and cart_products:
+        if form.is_valid() and len(cart_products) >= 1:
             order = self._create_order_data(
                 form=form, cart=cart, customer=customer)
             self._create_order_item(cart_products=cart_products, order=order)
 
             cart.in_order = True
             cart.save()
+            success = True
         else:
             logger.warning('Invalid order data')
-        return form
+            success = False
+        return form, success
 
     def _create_order_data(form, cart, customer):
         """ Create order data """

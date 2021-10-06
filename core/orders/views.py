@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import View
 
 from cart.mixins import CartMixin
@@ -26,13 +26,17 @@ class CreateOrderView(CartMixin, View):
 
     def post(self, request):
         form = OrderForm(request.POST)
-        form = OrderSystem.create_order(self=OrderSystem, form=form,
-                                        cart=self.cart)
-        cart = CartSystem.get_customer_cart(request)
-        cart_products = CartSystem.get_cart_products(cart=cart)
+        form, success = OrderSystem.create_order(self=OrderSystem, form=form,cart=self.cart)
         if form.errors:
+            cart = CartSystem.get_customer_cart(request)
+            cart_products = CartSystem.get_cart_products(cart=cart)
             return render(request, 'orders/checkout.html', {'form': form,
                                                             'cart_products': cart_products,
                                                             'cart': cart})
-        else:
+        if success:
             return render(request, 'orders/order_valid.html')
+        else:
+            return redirect('/order/invalid_order/')
+
+      
+        

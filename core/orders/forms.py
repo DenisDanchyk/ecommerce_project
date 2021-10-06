@@ -36,8 +36,31 @@ class OrderForm(forms.ModelForm):
     def clean_post_office(self):
         post_office = self.cleaned_data['post_office']
         for i in post_office:
-            if not isinstance(int(i), int):
-                print(i)
+            try:
+                int(i)
+            except ValueError:
                 raise forms.ValidationError(
                     "Номер пошти повинен складатися лише з цифр!")
         return post_office
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data['first_name']
+        for i in first_name:
+            try:
+                int(i)
+                raise forms.ValidationError(
+                    "В імені не повинно бути цифр!")
+            except ValueError:
+                pass
+        return first_name
+    
+    def clean_last_name(self):
+        last_name = self.cleaned_data['last_name']
+        for i in last_name:
+            try:
+                int(i)
+                raise forms.ValidationError(
+                    "В фімілії не повинно бути цифр!")
+            except ValueError:
+                pass
+        return last_name
