@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
+from coupons.models import Coupon
 from accounts.models import *
 
 
@@ -57,6 +58,7 @@ class Cart(models.Model):
     in_order = models.BooleanField(default=False, verbose_name="В обробці")
     for_anonymos_user = models.BooleanField(
         default=False, verbose_name="Для не авторизованих користувачів")
+    coupons = models.ManyToManyField(Coupon, related_name='related_coupons')
 
     def __str__(self):
         return f'Корзина для покупця {self.owner}'

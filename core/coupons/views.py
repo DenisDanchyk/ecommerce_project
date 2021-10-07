@@ -16,8 +16,7 @@ class ApplyCouponView(View):
         if success:
             messages.add_message(request, messages.INFO,
                                  "Купон успішно застосовано!")
-            return redirect('/cart/')
         else:
             messages.add_message(request, messages.INFO,
-                                 "Вказаний купон недійсний!")
-            return redirect('/cart/')
+                                 "Вказаний купон недійсний, або вже використаний!")
+        return redirect('/cart/')

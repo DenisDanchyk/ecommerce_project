@@ -100,7 +100,16 @@
                                 {% endfor %}
                             </ul>
                             <ul class="checkout__total__all">
-                                {% comment %} <li>Subtotal <span>$750.99</span></li> {% endcomment %}
+                                 {% if coupons %}
+                                <h6>Застосовані купони</h6>
+                                <hr>
+                                <ul>
+                                    {% for coupon in coupons %}
+                                    <li>Купон "{{coupon}}"<span>Знижка - {{coupon.discount}}%</span></li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                                <hr>
                                 <li>Всього <span>{{cart.final_price}} грн</span></li>
                             </ul>
                             <input type="submit" class="site-btn" value='Оформити замовлення'>

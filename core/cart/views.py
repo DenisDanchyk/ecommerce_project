@@ -5,6 +5,7 @@ from django.views.generic import View
 from store.services import ProductSystem
 
 from coupons.forms import CouponApplyForm
+from coupons.services import CouponSystem
 
 from .mixins import CartMixin
 from .services import CartSystem
@@ -23,7 +24,7 @@ class AddToCartView(CartMixin, View):
             self=ProductSystem,
             cart=self.cart, kwargs=kwargs)
         CartSystem.add_product_to_cart(self=CartSystem, request=request,
-                                         cart_product=cart_product, create=create)
+                                       cart_product=cart_product, create=create)
         CartSystem.save_cart(cart=self.cart)
 
         CartSystem.recal_total_products_in_cart(
@@ -74,4 +75,7 @@ class CartView(CartMixin, View):
 
     def get(self, request):
         coupon_form = CouponApplyForm()
-        return render(request, 'cart/cart_page.html', {'cart': self.cart, 'coupon_form': coupon_form})
+        coupons = CouponSystem.get_coupons_applied_to_cart(cart=self.cart)
+        return render(request, 'cart/cart_page.html', {'cart': self.cart,
+                                                       'coupon_form': coupon_form,
+                                                       'coupons': coupons})

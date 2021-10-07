@@ -1,4 +1,5 @@
 from django.db import models
+from decimal import Decimal
 
 from accounts.services import AccountSystem
 from store.services import ProductSystem
@@ -109,10 +110,22 @@ class CartSystem:
             models.Sum('final_price'), models.Count('id'))
         if cart_data.get('final_price__sum'):
             cart.final_price = cart_data['final_price__sum']
+            self._recalc_final_price_if_coupons_applied(cart=cart)
         else:
             cart.final_price = 0
         cart.total_products = cart_data['id__count']
         self.save_cart(cart=cart)
+
+    def _recalc_final_price_if_coupons_applied(cart):
+        """ Recalculation cart final price if coupons are applied """
+
+        if cart.coupons.filter(applied_to=cart):
+            coupons = cart.coupons.filter(applied_to=cart)
+            discount = 0
+            for coupon in coupons:
+                discount += coupon.discount
+            cart.final_price -= ((discount / Decimal(100)) * cart.final_price)
+        return cart.final_price
 
     def _save_cart_product(cart_product):
         """ Save product for cart """
@@ -156,3 +169,8 @@ class CartSystem:
         customer = AccountSystem.get_customer_account(request)
         cart = Cart.objects.create(owner=customer)
         return cart
+
+    def _add_coupon_to_cart(cart, coupon):
+        """ Add coupon to cart """
+
+        cart.coupons.add(coupon)

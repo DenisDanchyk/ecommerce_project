@@ -98,11 +98,20 @@
                 <div class="cart__discount">
                     <h6>Промокод</h6>
                     <form action="{% url 'coupons:apply_coupon' %}" method="POST">{% csrf_token %}
-                       {{coupon_form.code}}
-                       <input  type="submit" class='cart__discount_button' value="Застосувати">
+                        {{coupon_form.code}}
+                        <input type="submit" class='cart__discount_button' value="Застосувати">
                     </form>
                 </div>
                 <div class="cart__total">
+                    {% if coupons %}
+                    <h6>Застосовані купони</h6>
+                    <ul>
+                        {% for coupon in coupons %}
+                        <li>Купон "{{coupon}}"<span>Знижка - {{coupon.discount}}%</span></li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    <hr>
                     <h6>Загальна вартісь</h6>
                     <ul>
                         <li>Всього <span>{{cart.final_price}} грн.</span></li>
