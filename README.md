@@ -27,6 +27,7 @@ In `core/settings.py` add your Google account credentials to `EMAIL_HOST_USER` a
 Instructions, how to set Django SMTP described 
 <a href="https://medium.com/@_christopher/how-to-send-emails-with-python-django-through-google-smtp-server-for-free-22ea6ea0fb8e">here</a>.
 
+    # TODO: 
     SECRET_KEY = '1234567890'
     DEBUG = True
     
