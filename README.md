@@ -17,9 +17,9 @@ Additional information on https://www.python.org/downloads/
 
 ### 4. Install requirements
 
-
     pip install -r requirements.txt
     cd core
+
 
   
 ### 5. Set you Google account credentials for authentication system
@@ -28,7 +28,7 @@ Instructions, how to set Django SMTP described
 <a href="https://medium.com/@_christopher/how-to-send-emails-with-python-django-through-google-smtp-server-for-free-22ea6ea0fb8e">here</a>.
 
     SECRET_KEY = '1234567890'
-    DEBUG = False
+    DEBUG = True
     
     
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -40,8 +40,31 @@ Instructions, how to set Django SMTP described
     # TODO:
     EMAIL_HOST_PASSWORD = ""
     
+### 7. Create PosgresSQL database
+    
+    Go to psql shell
+    postgres=# CREATE DATABASE demo;
+    
+    And set in `core/settings.py` 
+    
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': 'localhost',
+        'PORT': '5432',
+        # TODO:
+        'NAME': "",
+        'USER': "",
+        'PASSWORD': ""
+    }
+}
 
-### 6. Make migrations and run server
+### 8. Fill cities model
+    
+    manage.py cities_light
+    
+    
+### 9. Make migrations and run server
     python manage.py makemigrations 
     python manage.py migrate 
     python manage.py runserver
